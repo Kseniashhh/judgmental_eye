@@ -7,6 +7,11 @@ from flask_debugtoolbar import DebugToolbarExtension
 
 from model import connect_to_db, db
 
+from flask import (Flask, render_template, redirect, request, flash,
+                   session)
+
+from model import User, Rating, Movie, connect_to_db, db
+
 
 app = Flask(__name__)
 
@@ -22,7 +27,29 @@ app.jinja_env.undefined = StrictUndefined
 @app.route('/')
 def index():
     """Homepage."""
-    return "<html><body>Placeholder for the homepage.</body></html>"
+
+    return render_template("homepage.html")
+
+@app.route("/users")
+def user_list():
+    """Show list of users."""
+
+    users = User.query.all()
+    return render_template("user_list.html", users=users)
+
+@app.route("/register")
+def signup_page():
+    """ Sign up page """
+
+    return render_template("registration.html")
+
+@app.route("/user_added")
+def user_signsUp():
+    """ Register new user, ignore existing"""
+
+    email = request.args.get("email") 
+    psw = request.args.get("password")
+    
 
 
 if __name__ == "__main__":

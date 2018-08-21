@@ -51,20 +51,17 @@ def load_movies():
         row = row.split("|")
         movie_id = row[0]
         mtitle = row[1]
-        released = row[3]
+        released = row[2]
         imdb_url = row[4]
-
         if released:
-            released_at = datetime.datetime.strptime(released,  "%d-%b-%Y")
+            released_at = datetime.strptime(released,  "%d-%b-%Y")
         else:
             released_at = None
 
         if '(' in mtitle:    
             index_par = mtitle.index("(")
             title = mtitle[:index_par]
-
-        print (movie_id,title,released_at, imdb_url)
-
+        title = title.strip()
 
         movie = Movie (movie_id = movie_id, 
                         title = title, released_at = released_at, 
@@ -72,6 +69,7 @@ def load_movies():
         db.session.add(movie)
 
     db.session.commit()
+    print("Successfully added all movies")
 
 
 
@@ -84,7 +82,7 @@ def load_ratings():
 
     for row in open("seed_data/u.data"):
         row = row.rstrip()
-        user_id, movie_id, score, timestamp = row.split("|")
+        user_id, movie_id, score, timestamp = row.split("\t")
 
         rating = Rating (user_id=user_id, movie_id= movie_id,
                         score=score)
@@ -92,6 +90,8 @@ def load_ratings():
         db.session.add(rating)
 
     db.session.commit()
+    print("Successfully added all movies")
+
 
 
 

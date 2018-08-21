@@ -1,0 +1,15 @@
+
+{% extends 'base.html' %}
+{% block content %}
+
+<h1>SignUp Page</h1>
+
+<br>
+<form action = '/user_added'>
+	Enter your email:* <br><input type="text" name="email" required><br><br>
+	Enter your password:* <br><input type="text" name="password" required><br><br>
+	<input type="submit" value="SignUp"><br>
+<form>
+
+
+{% endblock %}
