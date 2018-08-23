@@ -48,8 +48,57 @@ def user_signsUp():
     """ Register new user, ignore existing"""
 
     email = request.args.get("email") 
-    psw = request.args.get("password")
+    pswd = request.args.get("password")
+
+    user_exists = if_user_exists(email)
+
+    if user_exists == None:
+        user_added = add_user(email, pswd)
+        flash("User was successfully Signed Up")
+        user_exists = if_user_exists(email)
+        print(user_exists)
+        session['user'] = user_exists[0]
+        print(session)
+        return redirect("/")
+    else:  
+        flash("This user is aleady registered")
+        session['user'] = user_exists[0]
+        print(session)
+        return redirect("/")
+
+
+
+
     
+
+def if_user_exists(email):
+    """ Given email address checks if user already exists"""
+
+    QUERY = """
+        SELECT user_id, email
+        FROM users
+        WHERE email = :email
+        """
+
+    db_cursor = db.session.execute(QUERY, {'email': email})
+    row = db_cursor.fetchone()
+
+    return row
+
+
+def add_user(email, password):
+    """ Given email and password add new user to users table"""
+
+    QUERY = """
+        INSERT INTO users (email, password)
+        VALUES (:email, :password)
+        """
+
+    db_cursor = db.session.execute(QUERY, {'email': email, 
+                                        'password': password})
+
+    db.session.commit()
+
 
 
 if __name__ == "__main__":
@@ -58,6 +107,7 @@ if __name__ == "__main__":
     app.debug = True
     # make sure templates, etc. are not cached in debug mode
     app.jinja_env.auto_reload = app.debug
+    app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 
     connect_to_db(app)
 
