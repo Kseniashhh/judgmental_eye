@@ -2,13 +2,33 @@
 <html>
 <head>
   <title>Ratings</title>
+  <link rel = "stylesheet" href="/static/site.css">
+
 </head>
 
 <body>
   Ratings
+  <div>
+  	<form action = '/'>
+  		<input type='submit' value='LogOut'> 
+  	</form>
+  </div>
   <hr>
 
+  <div class="container">
+
+  <!-- Show flashed messages -->
+  {% with messages = get_flashed_messages() %}
+      {% for message in messages %}
+          <div class="alert alert-warning" id="flashMessage">{{ message }}</div>
+      {% endfor %}
+  {% endwith %}
+
+</div>
+
   {% block content %} put your content here {% endblock %}
+
+
 
 </body>
 </html>

@@ -50,26 +50,22 @@ def user_signsUp():
     email = request.args.get("email") 
     pswd = request.args.get("password")
 
+
     user_exists = if_user_exists(email)
 
     if user_exists == None:
         user_added = add_user(email, pswd)
-        flash("User was successfully Signed Up")
         user_exists = if_user_exists(email)
-        print(user_exists)
         session['user'] = user_exists[0]
-        print(session)
+        flash("User was successfully Signed Up")
         return redirect("/")
     else:  
-        flash("This user is aleady registered")
         session['user'] = user_exists[0]
         print(session)
+        flash("This user is aleady registered and logged in now")
         return redirect("/")
 
 
-
-
-    
 
 def if_user_exists(email):
     """ Given email address checks if user already exists"""
@@ -82,8 +78,31 @@ def if_user_exists(email):
 
     db_cursor = db.session.execute(QUERY, {'email': email})
     row = db_cursor.fetchone()
+    print(row)
 
     return row
+
+
+
+
+@app.route("/")
+def user_logOut():
+    """ log out current user """
+    print(session)
+    if session['user']:
+        session.pop('user')
+        flash("User is logged out")
+        return redirect("/")
+    else:
+        flash("User is not logged in")
+        return redirect("/")
+
+
+
+
+
+
+
 
 
 def add_user(email, password):
