@@ -30,6 +30,9 @@ def index():
 
     return render_template("homepage.html")
 
+######################################################
+
+
 @app.route("/users")
 def user_list():
     """Show list of users."""
@@ -37,11 +40,16 @@ def user_list():
     users = User.query.all()
     return render_template("user_list.html", users=users)
 
+######################################################
+
+
 @app.route("/register")
 def signup_page():
     """ Sign up page """
 
     return render_template("registration.html")
+
+######################################################
 
 @app.route("/user_added")
 def user_signsUp():
@@ -49,21 +57,20 @@ def user_signsUp():
 
     email = request.args.get("email") 
     pswd = request.args.get("password")
-
+    
 
     user_exists = if_user_exists(email)
 
     if user_exists == None:
-        user_added = add_user(email, pswd)
+        add_user(email, pswd)
         user_exists = if_user_exists(email)
         session['user'] = user_exists[0]
         flash("User was successfully Signed Up")
         return redirect("/")
     else:  
-        session['user'] = user_exists[0]
-        print(session)
-        flash("This user is aleady registered and logged in now")
-        return redirect("/")
+        flash("This user is aleady registered. Please log in")
+        return redirect("/login")
+
 
 
 
@@ -85,26 +92,6 @@ def if_user_exists(email):
 
 
 
-@app.route("/")
-def user_logOut():
-    """ log out current user """
-    print(session)
-    if session['user']:
-        session.pop('user')
-        flash("User is logged out")
-        return redirect("/")
-    else:
-        flash("User is not logged in")
-        return redirect("/")
-
-
-
-
-
-
-
-
-
 def add_user(email, password):
     """ Given email and password add new user to users table"""
 
@@ -117,6 +104,64 @@ def add_user(email, password):
                                         'password': password})
 
     db.session.commit()
+
+###############################################################
+
+
+
+@app.route("/login")
+def login_page():
+    """ Log in page """
+
+    return render_template("login.html")
+
+
+################################################################
+
+
+@app.route("/login_user")
+def user_login():
+    """ Logs user in """
+
+    email = request.args.get("email") 
+    pswd = request.args.get("password")
+
+    user_exists = if_user_exists(email)
+
+    if user_exists == None:
+        flash("This user is not registered, please sign up")
+        return redirect("/register")
+    else:  
+        session['user'] = user_exists[0]
+        flash("This user is successfully logged in")
+        return redirect("/login")
+
+
+###############################################################
+
+
+@app.route("/logout")
+def user_logOut():
+    """ log out current user """
+    
+    if 'user' not in session:
+        flash("User is not logged in")
+        return redirect("/")
+        
+    else:
+        session.pop('user')
+        flash("User is logged out")
+        return redirect("/")
+
+
+
+################################################################
+
+
+
+
+
+
 
 
 

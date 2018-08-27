@@ -3,16 +3,25 @@
 <head>
   <title>Ratings</title>
   <link rel = "stylesheet" href="/static/site.css">
+  <script src="http://code.jquery.com/jquery.js"></script>
 
 </head>
 
 <body>
   Ratings
+   <div>
+   	{% if session.get('user') == None %}
+  	<form action = '/login'>
+  		<input type='submit' value='LogIn'> 
+  	</form>
+  </div>
+  {% else %}
   <div>
-  	<form action = '/'>
+  	<form action = '/logout'>
   		<input type='submit' value='LogOut'> 
   	</form>
   </div>
+  {% endif %}
   <hr>
 
   <div class="container">

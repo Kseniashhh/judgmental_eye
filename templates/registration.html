@@ -5,11 +5,12 @@
 <h1>SignUp Page</h1>
 
 <br>
-<form action = '/user_added'>
+<form action = '/user_added' id="signup">
 	Enter your email:* <br><input type="text" name="email" placeholder="Your email" required><br><br>
-	Enter your password:* <br><input type="text" name="password" placeholder="Your password" required><br><br>
+	Enter your password:* <br><input type="text" name="password" id="password" placeholder="Your password" required><br><br>
+	Confirm your password:* <br><input type="text" name="confirm_password" id ="confirm" placeholder="Confirm your password" required><br><br>
 	<input type="submit" value="SignUp"><br>
 <form>
-
+ <script src="/static/signup.js"></script>
 
 {% endblock %}
