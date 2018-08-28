@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1>Movie Details</h1>
+
+<br>
+
+    Movie {{ movie.title }}
+ 	<br>
+        Release date is {{ movie.released_at }} <br><br>
+        IMdb link is {{ movie.imdb_url }} <br>
+        The average rating for this movie is {{ average }}
+        
+        <br>
+        <h2 id="header"> Here's al the ratings this movie has received: </h1>
+        <ol> 
+        {% for rating in movies_rating %}
+        	<li> Rated as <b id="list">{{rating}}</b></li>
+        
+        {% endfor %}
+        </ol>
+      
+   
+{% endblock %}

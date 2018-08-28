@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1>User Details</h1>
+
+<br>
+
+    UserID {{ user_info[0] }}
+ 	<br>
+        The age is {{ user_info[1] }} <br>
+        The zipcode is {{ user_info[2] }} <br>
+        
+        <br>
+        <h2 id="header"> Here's the movie list that was rated by this user: </h1>
+        <ol> 
+        {% for movie, rating in movies_rating %}
+        	<li> <b>{{ movie }}</b> was rated as <b id="list">{{rating}}</b></li>
+        
+        {% endfor %}
+        </ol>
+      
+   
+{% endblock %}

@@ -1,3 +1,12 @@
 #flashMessage {
 	color: red;
 }
+
+#header {
+	font-family: cursive;
+	font-weight: 15px;
+}
+
+#list {
+	color: purple;
+}

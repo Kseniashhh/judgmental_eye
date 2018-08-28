@@ -40,6 +40,70 @@ def user_list():
     users = User.query.all()
     return render_template("user_list.html", users=users)
 
+
+######################################################
+
+@app.route("/movies")
+def movie_list():
+    """Show list of movies."""
+
+    movies = Movie.query.all()
+    return render_template("movie_list.html", movies=movies)
+
+
+######################################################
+
+
+@app.route("/movies/<movie_id>")
+def movie_details(movie_id):
+    """ Show movie details """
+
+    
+    movie = Movie.query.get(movie_id)
+    
+
+    movies_rating = rating_details(movie.movie_id)
+
+    avg_movie_score = avg_rating_details_by_movie(movie.movie_id)
+
+    return render_template("movie_details.html", movies_rating=movies_rating,movie=movie, average = avg_movie_score)
+
+
+def rating_details_by_movie(movie_id):
+    """ Show all rating for specific movie"""
+
+
+
+    QUERY = """
+        SELECT score
+        FROM ratings
+        WHERE movie_id = :movie_id
+        """
+
+    db_cursor = db.session.execute(QUERY, {'movie_id': movie_id})
+
+    rows = db_cursor.fetchall()
+
+    return rows
+
+def avg_rating_details_by_movie(movie_id):
+    """Average rating for specific movie"""
+
+
+
+    QUERY = """
+        SELECT AVG(score)
+        FROM ratings
+        WHERE movie_id = :movie_id
+        """
+
+    db_cursor = db.session.execute(QUERY, {'movie_id': movie_id})
+
+    avg = db_cursor.fetchone()
+
+    return avg
+
+
 ######################################################
 
 
@@ -158,10 +222,53 @@ def user_logOut():
 ################################################################
 
 
+@app.route("/users/<user_id>")
+def user_details(user_id):
+    """ Show user details """
+
+    
+
+    QUERY = """
+        SELECT user_id, age, zipcode
+        FROM users
+        WHERE user_id = :user_id
+        """
+
+    db_cursor = db.session.execute(QUERY, {'user_id': user_id})
+
+    user_info = db_cursor.fetchone()
+
+    movies_rating = rating_details(user_info[0])
+
+    return render_template("user_details.html", user_info=user_info, movies_rating=movies_rating)
+
+##Another way to right a function above
+
+    # user = User.query.get(user_id)
+    # print(user)
+
+    # movies_rating = rating_details(user.user_id)
+
+    # and pass an object and call columns as methods
+
+
+def rating_details(user_id):
+    """ Show all movied rated by this user"""
 
 
 
+    QUERY = """
+        SELECT movies.title, ratings.score
+        FROM ratings
+        LEFT JOIN movies ON ratings.movie_id = movies.movie_id
+        WHERE ratings.user_id = :user_id
+        """
 
+    db_cursor = db.session.execute(QUERY, {'user_id': user_id})
+
+    rows = db_cursor.fetchall()
+
+    return rows
 
 
 
